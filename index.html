@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Status</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Queue</h1>
+        <p>You have <span id="patientsBefore">0</span> patients before you</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const serialNumber = urlParams.get('serialNumber');
+            const patients = JSON.parse(localStorage.getItem('patients')) || [];
+            
+            // Calculate the number of patients before the current patient
+            const patientsBefore = patients.filter(patient => patient.serialNumber < serialNumber).length;
+            document.getElementById('patientsBefore').textContent = patientsBefore;
+        });
+    </script>
+</body>
+</html>

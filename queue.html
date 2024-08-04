@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        ul li span {
+            flex: 1;
+            text-align: center;
+        }
+        ul li span:first-child {
+            flex: 0 0 50px;
+            text-align: left;
+        }
+        ul li span:nth-child(2) {
+            flex: 1;
+        }
+        ul li span:nth-child(3) {
+            flex: 1;
+        }
+        ul li button {
+            flex: 0 0 60px;
+        }
+        .deleteButton {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .deleteButton:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Queue</h1>
+        <ul id="patientQueue">
+            <!-- Patients will be added here -->
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const patients = JSON.parse(localStorage.getItem('patients')) || [];
+            const queueList = document.getElementById('patientQueue');
+            
+            function renderQueue() {
+                queueList.innerHTML = '';
+                patients.forEach((patient, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span>#${index + 1}</span>
+                        <span>${patient.name}</span>
+                        <span>${patient.phone}</span>
+                        <button class="deleteButton" data-index="${index}">NEXT</button>
+                    `;
+                    queueList.appendChild(listItem);
+                });
+                localStorage.setItem('patients', JSON.stringify(patients));
+            }
+            
+            queueList.addEventListener('click', function(event) {
+                if (event.target.classList.contains('deleteButton')) {
+                    const index = event.target.getAttribute('data-index');
+                    patients.splice(index, 1);
+                    renderQueue();
+                }
+            });
+
+            renderQueue();
+        });
+    </script>
+</body>
+</html>
