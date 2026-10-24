@@ -56,12 +56,18 @@ UNext/
 ├── Unext.html     # patient's queue position
 ├── queue.html     # staff queue (drag & drop, NEXT)
 ├── styles.css
-└── docs/screenshots/
+└── docs/
+    ├── Summer_Training_Report.pdf
+    └── screenshots/
 ```
+
+## Documentation
+
+Summer training report (student ID removed): [`docs/Summer_Training_Report.pdf`](docs/Summer_Training_Report.pdf).
 
 ## Credits
 
-Built by **Hala Jalal** during the Computer Science summer training (Umm Al-Qura University) at Medical Fakeeh, 2024.
+Developed during the Computer Science summer training (Umm Al-Qura University) at Medical Fakeeh, 2024, as part of teamwork with other trainees. **Hala Jalal** contributed as a team member.
 
 ## License
 
