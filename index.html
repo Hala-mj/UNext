@@ -3,25 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queue Status</title>
+    <title>UNext</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .button {
+            display: block;
+            width: calc(100% - 40px);
+            max-width: 200px;
+            margin: 10px auto;
+            padding: 15px;
+            background-color: #1C7E9C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #95263A;
+        }
+        #qrcode {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <h1>Queue</h1>
-        <p>You have <span id="patientsBefore">0</span> patients before you</p>
+        <h1>Welcome to UNext</h1>
+        <button class="button" onclick="generateQRCode('lineUp.html')">Line Up</button>
+        <button class="button" onclick="generateQRCode('queue.html')">Queue</button>
+        <div id="qrcode"></div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const serialNumber = urlParams.get('serialNumber');
-            const patients = JSON.parse(localStorage.getItem('patients')) || [];
-            
-            // Calculate the number of patients before the current patient
-            const patientsBefore = patients.filter(patient => patient.serialNumber < serialNumber).length;
-            document.getElementById('patientsBefore').textContent = patientsBefore;
-        });
+        function generateQRCode(page) {
+            // Build the URL relative to this page so it also works from a sub-folder (e.g. GitHub Pages)
+            const url = new URL(page, window.location.href).href;
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById("qrcode"), url);
+        }
     </script>
 </body>
 </html>

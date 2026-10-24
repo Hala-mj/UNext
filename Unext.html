@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Status</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Queue</h1>
+        <p>Patients before you: <span id="patientsBefore">0</span></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const serialNumber = parseInt(urlParams.get('serialNumber'), 10);
+            const patientsBeforeElement = document.getElementById('patientsBefore');
+
+            function updateQueueStatus() {
+                const patients = JSON.parse(localStorage.getItem('patients')) || [];
+                const sortedPatients = patients.sort((a, b) => a.serialNumber - b.serialNumber);
+                
+                const currentPatientIndex = sortedPatients.findIndex(patient => patient.serialNumber === serialNumber);
+                
+                if (currentPatientIndex !== -1) {
+                    patientsBeforeElement.textContent = currentPatientIndex;
+                } else {
+                    patientsBeforeElement.textContent = 'N/A';
+                }
+            }
+
+            updateQueueStatus();
+
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'patients') {
+                    updateQueueStatus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

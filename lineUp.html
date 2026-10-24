@@ -25,13 +25,11 @@
             const mrn = document.getElementById('patientMRN').value;
             const phone = document.getElementById('patientPhone').value;
 
-            // Check if MRN is a number
             if (isNaN(mrn)) {
                 alert('Enter a valid MRN please');
                 return;
             }
 
-            // Validate phone number format (simple regex for demonstration, adjust as needed)
             const phonePattern = /^[0-9]{10}$/;
             if (!phonePattern.test(phone)) {
                 alert('Phone number must be a 10-digit number');
@@ -40,13 +38,11 @@
 
             const patients = JSON.parse(localStorage.getItem('patients')) || [];
 
-            // Check if MRN is unique
             if (patients.some(patient => patient.mrn === mrn)) {
                 alert('Patient already in line');
                 return;
             }
 
-            // Check if phone number is unique
             if (patients.some(patient => patient.phone === phone)) {
                 alert('Phone number must be unique');
                 return;
@@ -56,8 +52,7 @@
             patients.push(newPatient);
             localStorage.setItem('patients', JSON.stringify(patients));
             
-            // Redirect to user_queue_wait.html
-        window.location.href = `index.html?serialNumber=${newPatient.serialNumber}`;
+            window.location.href = `Unext.html?serialNumber=${newPatient.serialNumber}`;
         });
     </script>
 </body>

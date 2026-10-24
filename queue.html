@@ -7,57 +7,82 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 800px;
             margin: 0 auto;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        ul li {
-            padding: 15px;
+        th, td {
+            padding: 2%;
             border-bottom: 1px solid #ccc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        ul li span {
-            flex: 1;
             text-align: center;
+            font-size: 1rem;
         }
-        ul li span:first-child {
-            flex: 0 0 50px;
-            text-align: left;
+        th {
+            font-weight: bold;
+            background-color: #f5f5f5;
         }
-        ul li span:nth-child(2) {
-            flex: 1;
-        }
-        ul li span:nth-child(3) {
-            flex: 1;
-        }
-        ul li button {
-            flex: 0 0 60px;
-        }
+
         .deleteButton {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
+           background-color: #e74c3c;
+           color: white;
+           border: none;
+           border-radius: 5px;
+           padding: 5px 10px;
+           cursor: pointer;
+}
         .deleteButton:hover {
             background-color: #c0392b;
         }
+
+        /* Media queries for mobile responsiveness */
+        @media (max-width: 600px) {
+            th, td {
+                padding: 4%;
+                font-size: 0.875rem;
+            }
+            .deleteButton {
+                padding: 4%;
+                font-size: 0.875rem;
+            }
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 400px) {
+            th, td {
+                padding: 5%;
+                font-size: 0.75rem;
+            }
+            .deleteButton {
+                padding: 5%;
+                font-size: 0.75rem;
+            }
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Queue</h1>
-        <ul id="patientQueue">
-            <!-- Patients will be added here -->
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Turn</th>
+                    <th>Patient Name</th>
+                    <th>MRN</th>
+                    <th>Phone Number</th>
+                    <th>Move</th>
+                </tr>
+            </thead>
+            <tbody id="patientQueue">
+                <!-- Patients will be added here -->
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -68,14 +93,16 @@
             function renderQueue() {
                 queueList.innerHTML = '';
                 patients.forEach((patient, index) => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <span>#${index + 1}</span>
-                        <span>${patient.name}</span>
-                        <span>${patient.phone}</span>
-                        <button class="deleteButton" data-index="${index}">NEXT</button>
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-index', index);
+                    row.innerHTML = `
+                        <td>#${index + 1}</td>
+                        <td>${patient.name}</td>
+                        <td>${patient.mrn}</td>
+                        <td>${patient.phone}</td>
+                        <td><button class="deleteButton" data-index="${index}">NEXT</button></td>
                     `;
-                    queueList.appendChild(listItem);
+                    queueList.appendChild(row);
                 });
                 localStorage.setItem('patients', JSON.stringify(patients));
             }
@@ -84,6 +111,24 @@
                 if (event.target.classList.contains('deleteButton')) {
                     const index = event.target.getAttribute('data-index');
                     patients.splice(index, 1);
+                    renderQueue();
+                }
+            });
+
+            new Sortable(queueList, {
+                onEnd: function (event) {
+                    const itemEl = event.item;
+                    const fromIndex = event.oldIndex;
+                    const toIndex = event.newIndex;
+
+                    const movedPatient = patients.splice(fromIndex, 1)[0];
+                    patients.splice(toIndex, 0, movedPatient);
+
+                    patients.forEach((patient, index) => {
+                        patient.serialNumber = index + 1;
+                    });
+
+                    localStorage.setItem('patients', JSON.stringify(patients));
                     renderQueue();
                 }
             });
